@@ -12,8 +12,8 @@ using ProjetoLivros.Context;
 namespace ProjetoLivros.Migrations
 {
     [DbContext(typeof(LivrosContext))]
-    [Migration("20250501010004_inicial")]
-    partial class inicial
+    [Migration("20250506001032_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace ProjetoLivros.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AssinaturaId"));
 
+                    b.Property<int?>("AssinaturaId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");
 
@@ -41,12 +44,18 @@ namespace ProjetoLivros.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("AssinaturaId");
+
+                    b.HasIndex("AssinaturaId");
+
+                    b.HasIndex("AssinaturaId1");
 
                     b.HasIndex("UsuarioId");
 
@@ -63,9 +72,13 @@ namespace ProjetoLivros.Migrations
 
                     b.Property<string>("NomeCategoria")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("CategoriaId");
+
+                    b.HasIndex("CategoriaId");
 
                     b.ToTable("Categorias");
                 });
@@ -80,7 +93,9 @@ namespace ProjetoLivros.Migrations
 
                     b.Property<string>("Autor")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
@@ -89,15 +104,22 @@ namespace ProjetoLivros.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("LivroId");
 
                     b.HasIndex("CategoriaId");
+
+                    b.HasIndex("LivroId");
 
                     b.ToTable("Livros");
                 });
@@ -112,9 +134,14 @@ namespace ProjetoLivros.Migrations
 
                     b.Property<string>("DescricaoTipo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("TipoUsuarioId");
+
+                    b.HasIndex("DescricaoTipo")
+                        .IsUnique();
 
                     b.ToTable("TipoUsuarios");
                 });
@@ -171,8 +198,12 @@ namespace ProjetoLivros.Migrations
 
             modelBuilder.Entity("ProjetoLivros.Models.Assinatura", b =>
                 {
+                    b.HasOne("ProjetoLivros.Models.Assinatura", null)
+                        .WithMany("Assinaturas")
+                        .HasForeignKey("AssinaturaId1");
+
                     b.HasOne("ProjetoLivros.Models.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Assinaturas")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -202,6 +233,11 @@ namespace ProjetoLivros.Migrations
                     b.Navigation("TipoUsuario");
                 });
 
+            modelBuilder.Entity("ProjetoLivros.Models.Assinatura", b =>
+                {
+                    b.Navigation("Assinaturas");
+                });
+
             modelBuilder.Entity("ProjetoLivros.Models.Categoria", b =>
                 {
                     b.Navigation("Livros");
@@ -210,6 +246,11 @@ namespace ProjetoLivros.Migrations
             modelBuilder.Entity("ProjetoLivros.Models.TipoUsuario", b =>
                 {
                     b.Navigation("Usuarios");
+                });
+
+            modelBuilder.Entity("ProjetoLivros.Models.Usuario", b =>
+                {
+                    b.Navigation("Assinaturas");
                 });
 #pragma warning restore 612, 618
         }

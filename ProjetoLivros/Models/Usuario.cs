@@ -13,5 +13,7 @@
         public DateTime DataAtualizacao { get; set; }
         public int TipoUsuarioId { get; set; }
         public TipoUsuario? TipoUsuario { get; set; }
+
+        public List<Assinatura> Assinaturas { get; set; } = new();
     }
 }
