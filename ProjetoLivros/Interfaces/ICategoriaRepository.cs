@@ -11,7 +11,7 @@ namespace ProjetoLivros.Interfaces
 
         void Cadastrar(CategoriaDTO categoria);
 
-        void Atualizar(int id, Categoria categoria);
+        void Atualizar(int id, CategoriaDTO categoria);
 
         void Deletar(int id);
     }

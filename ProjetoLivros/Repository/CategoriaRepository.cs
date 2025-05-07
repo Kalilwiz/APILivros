@@ -1,4 +1,5 @@
-﻿using ProjetoLivros.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjetoLivros.Context;
 using ProjetoLivros.DTO;
 using ProjetoLivros.Interfaces;
 using ProjetoLivros.Models;
@@ -14,7 +15,7 @@ namespace ProjetoLivros.Repository
         {
             _context = context;
         }
-        public void Atualizar(int id, Categoria categoria)
+        public void Atualizar(int id, CategoriaDTO categoria)
         {
             Categoria produtoencontrado = _context.Categorias.Find(id);
 
@@ -63,6 +64,7 @@ namespace ProjetoLivros.Repository
         public List<Categoria> ListarTodos()
         {
             return _context.Categorias.ToList();
+
         }
     }
 }
